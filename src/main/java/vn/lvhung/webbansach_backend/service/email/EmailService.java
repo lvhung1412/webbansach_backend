@@ -1,4 +1,4 @@
-package vn.lvhung.webbansach_backend.service;
+package vn.lvhung.webbansach_backend.service.email;
 
 public interface EmailService {
 
