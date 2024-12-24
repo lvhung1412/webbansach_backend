@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import vn.lvhung.webbansach_backend.dao.NguoiDungRepository;
 import vn.lvhung.webbansach_backend.entity.NguoiDung;
 import vn.lvhung.webbansach_backend.entity.ThongBao;
+import vn.lvhung.webbansach_backend.service.email.EmailService;
 
 import java.util.UUID;
 

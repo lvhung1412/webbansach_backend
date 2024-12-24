@@ -1,7 +1,6 @@
 package vn.lvhung.webbansach_backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -12,19 +11,18 @@ import vn.lvhung.webbansach_backend.dao.NguoiDungRepository;
 import vn.lvhung.webbansach_backend.dao.QuyenRepository;
 import vn.lvhung.webbansach_backend.entity.NguoiDung;
 import vn.lvhung.webbansach_backend.entity.Quyen;
-import vn.lvhung.webbansach_backend.entity.ThongBao;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserSecurityServiceImpl implements UserSecurityService {
 
     private NguoiDungRepository nguoiDungRepository;
     private QuyenRepository quyenRepository;
 
     @Autowired
-    public UserServiceImpl(NguoiDungRepository nguoiDungRepository, QuyenRepository quyenRepository) {
+    public UserSecurityServiceImpl(NguoiDungRepository nguoiDungRepository, QuyenRepository quyenRepository) {
         this.nguoiDungRepository = nguoiDungRepository;
         this.quyenRepository = quyenRepository;
     }

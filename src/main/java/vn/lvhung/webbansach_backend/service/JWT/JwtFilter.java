@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import vn.lvhung.webbansach_backend.service.UserService;
+import vn.lvhung.webbansach_backend.service.UserSecurityService;
 
 import java.io.IOException;
 @Component
@@ -20,7 +20,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserService userDetailService;
+    private UserSecurityService userDetailService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
