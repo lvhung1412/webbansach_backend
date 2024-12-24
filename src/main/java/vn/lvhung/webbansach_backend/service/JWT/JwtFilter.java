@@ -1,4 +1,4 @@
-package vn.lvhung.webbansach_backend.filter;
+package vn.lvhung.webbansach_backend.service.JWT;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import vn.lvhung.webbansach_backend.service.JwtService;
 import vn.lvhung.webbansach_backend.service.UserService;
 
 import java.io.IOException;

@@ -1,28 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project [
-		<!ELEMENT project (modelVersion|parent|groupId|artifactId|version|name|description|properties|dependencies|build)*>
-		<!ATTLIST project
-				xmlns CDATA #REQUIRED
-				xmlns:xsi CDATA #REQUIRED
-				xsi:schemaLocation CDATA #REQUIRED>
-		<!ELEMENT modelVersion (#PCDATA)>
-		<!ELEMENT parent (groupId|artifactId|version|relativePath)*>
-		<!ELEMENT groupId (#PCDATA)>
-		<!ELEMENT artifactId (#PCDATA)>
-		<!ELEMENT version (#PCDATA)>
-		<!ELEMENT relativePath (#PCDATA)>
-		<!ELEMENT name (#PCDATA)>
-		<!ELEMENT description (#PCDATA)>
-		<!ELEMENT properties (java.version)*>
-		<!ELEMENT java.version (#PCDATA)>
-		<!ELEMENT dependencies (dependency)*>
-		<!ELEMENT dependency (groupId|artifactId|scope|optional)*>
-		<!ELEMENT scope (#PCDATA)>
-		<!ELEMENT optional (#PCDATA)>
-		<!ELEMENT build (plugins)*>
-		<!ELEMENT plugins (plugin)*>
-		<!ELEMENT plugin (groupId|artifactId)*>
-		]>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -115,7 +92,23 @@
 			<version>1.18.20.0</version>
 			<scope>provided</scope>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44 -->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.31.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-taglib</artifactId>
+			<version>1.31.0</version>
+		</dependency>
+		<!-- Dùng để tạo ra mật khẩu ngẫu nhiên-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.13.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import vn.lvhung.webbansach_backend.filter.JwtFilter;
+import vn.lvhung.webbansach_backend.service.JWT.JwtFilter;
 import vn.lvhung.webbansach_backend.service.UserService;
 
 import java.util.Arrays;

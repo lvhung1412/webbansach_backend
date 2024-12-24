@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.lvhung.webbansach_backend.entity.NguoiDung;
 import vn.lvhung.webbansach_backend.security.JwtResponse;
 import vn.lvhung.webbansach_backend.security.LoginRequest;
-import vn.lvhung.webbansach_backend.service.JwtService;
+import vn.lvhung.webbansach_backend.service.JWT.JwtService;
 import vn.lvhung.webbansach_backend.service.TaiKhoanService;
 import vn.lvhung.webbansach_backend.service.UserService;
 

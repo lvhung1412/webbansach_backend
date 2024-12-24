@@ -1,4 +1,4 @@
-package vn.lvhung.webbansach_backend.service;
+package vn.lvhung.webbansach_backend.service.JWT;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import vn.lvhung.webbansach_backend.entity.NguoiDung;
 import vn.lvhung.webbansach_backend.entity.Quyen;
+import vn.lvhung.webbansach_backend.service.UserService;
 
 import java.security.Key;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class JwtService {
     public static final String SERECT = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
     @Autowired
-    private  UserService userService;
+    private UserService userService;
 
     // Tạo JWT dựa trên tên đang nhập
     public String generateToken(String tenDangNhap){
@@ -88,7 +89,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Kiểm tra tời gian hết hạn từ JWT
+    // Kiểm tra thời gian hết hạn từ JWT
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
     }
@@ -98,7 +99,7 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    // Kiểm tra tính hợp lệ
+    // Kiểm tra tính hợp lệ của token
     public Boolean validateToken(String token, UserDetails userDetails){
         final String tenDangNhap = extractUsername(token);
         System.out.println(tenDangNhap);
