@@ -3,6 +3,7 @@ package vn.lvhung.webbansach_backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -23,12 +24,12 @@ public class NguoiDung {
     private String matKhau;
     @Column(name = "gioi_tinh")
     private char gioiTinh;
+    @Column(name = "ngay_sinh")
+    private Date ngaySinh;
     @Column(name = "email")
     private String email;
     @Column(name = "so_dien_thoai")
     private String soDienThoai;
-    @Column(name = "dia_chi_mua_hang")
-    private String diaChiMuaHang;
     @Column(name = "dia_chi_giao_hang")
     private String diaChiGiaoHang;
     @Column(name = "da_kich_hoat")
@@ -67,6 +68,12 @@ public class NguoiDung {
             CascadeType.DETACH, CascadeType.REFRESH
     })
     private List<DonHang> danhSachDonhang;
+
+    @OneToMany(mappedBy = "nguoiDung",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<GioHang> listCartItems;
+
+    @OneToMany(mappedBy = "nguoiDung",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PhanHoi> danhSachPhanHoi;
 
 }
 

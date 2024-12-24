@@ -9,12 +9,14 @@ import lombok.Data;
 public class ChiTietDonHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="chi_tiet_don_hang")
-    private long chiTietDonHang;
+    @Column(name="ma_chi_tiet_don_hang")
+    private long maChiTietDonHang;
     @Column(name="so_luong")
     private int soLuong;
     @Column(name="gia_ban")
     private double giaBan;
+    @Column(name = "da_danh_gia")
+    private boolean daDanhGia; // đã đánh giá chưa
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
