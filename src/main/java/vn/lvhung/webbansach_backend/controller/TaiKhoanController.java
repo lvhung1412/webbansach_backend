@@ -13,7 +13,7 @@ import vn.lvhung.webbansach_backend.security.JwtResponse;
 import vn.lvhung.webbansach_backend.security.LoginRequest;
 import vn.lvhung.webbansach_backend.service.JWT.JwtService;
 import vn.lvhung.webbansach_backend.service.TaiKhoanService;
-import vn.lvhung.webbansach_backend.service.UserService;
+import vn.lvhung.webbansach_backend.service.UserSecurityService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -27,7 +27,7 @@ public class TaiKhoanController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService userService;
+    private UserSecurityService userService;
 
     @Autowired
     private JwtService jwtService;

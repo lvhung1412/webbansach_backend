@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import vn.lvhung.webbansach_backend.service.JWT.JwtFilter;
-import vn.lvhung.webbansach_backend.service.UserService;
+import vn.lvhung.webbansach_backend.service.UserSecurityService;
 
 import java.util.Arrays;
 
@@ -29,7 +29,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserService userService){
+    public DaoAuthenticationProvider authenticationProvider(UserSecurityService userService){
         DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
         dap.setUserDetailsService(userService);
         dap.setPasswordEncoder(passwordEncoder());
