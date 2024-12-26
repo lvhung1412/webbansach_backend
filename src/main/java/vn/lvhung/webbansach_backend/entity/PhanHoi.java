@@ -1,12 +1,14 @@
 package vn.lvhung.webbansach_backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Date;
 
 @Data
 @Entity
+@Builder
 @Table(name = "phan_hoi")
 public class PhanHoi {
     @Id
@@ -18,10 +20,10 @@ public class PhanHoi {
     private String tieuDe;
 
     @Column(name = "noi_dung")
-    private String noi_dung;
+    private String noiDung;
 
     @Column(name = "ngay_tao")
-    private Date ngay_tao;
+    private Date ngayTao;
 
     @Column(name = "da_doc")
     private boolean daDoc;
