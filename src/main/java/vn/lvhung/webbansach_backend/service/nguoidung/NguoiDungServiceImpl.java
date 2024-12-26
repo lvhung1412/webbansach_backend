@@ -200,7 +200,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
             }
 
             NguoiDung newUser =  nguoiDungRepository.save(user.get());
-            final String jwtToken = jwtService.generateToken(newUser.getUsername());
+            final String jwtToken = jwtService.generateToken(newUser.getTenDangNhap());
             return ResponseEntity.ok(new JwtResponse(jwtToken));
 
         } catch (Exception e) {
@@ -213,8 +213,8 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     @Override
     public ResponseEntity<?> updateProfile(JsonNode userJson) {
         try{
-            NguoiDung userRequest = objectMapper.treeToValue(userJson, User.class);
-            Optional<NguoiDung> user = nguoiDungRepository.findById(userRequest.getIdUser());
+            NguoiDung userRequest = objectMapper.treeToValue(userJson, NguoiDung.class);
+            Optional<NguoiDung> user = nguoiDungRepository.findById(userRequest.getMaNguoiDung());
 
             user.get().setHoDem(userRequest.getHoDem());
             user.get().setTen(userRequest.getTen());
@@ -272,7 +272,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
         String message = "Cảm ơn bạn đã là thành viên của chúng tôi. Vui lòng kích hoạt tài khoản!: <br/> Mã kích hoạt: <strong>"+ activationCode +"<strong/>";
         message += "<br/> Click vào đây để <a href="+ url +">kích hoạt</a>";
         try {
-            emailService.sendMessage("dongph.0502@gmail.com", email, subject, message);
+            emailService.sendMessage("laihung1412@gmail.com", email, subject, message);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -283,7 +283,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
         String message = "Mật khẩu tạm thời của bạn là: <strong>" + password + "</strong>";
         message += "<br/> <span>Vui lòng đăng nhập và đổi lại mật khẩu của bạn</span>";
         try {
-            emailService.sendMessage("dongph.0502@gmail.com", email, subject, message);
+            emailService.sendMessage("laihung1412@gmail.com", email, subject, message);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

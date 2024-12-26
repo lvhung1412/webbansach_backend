@@ -68,7 +68,7 @@ public class TaiKhoanService {
         String url = "http://localhost:3000/kich-hoat/"+email+"/"+maKichHoat;
         text+=("<br/> <a href="+url+">"+url+"</a> ");
 
-        emailService.sendMessage("tunletest1.email@gmail.com", email, subject, text);
+        emailService.sendMessage("laihung1412@gmail.com", email, subject, text);
     }
 
     public ResponseEntity<?> kichHoatTaiKHoan(String email, String maKichHoat) {
