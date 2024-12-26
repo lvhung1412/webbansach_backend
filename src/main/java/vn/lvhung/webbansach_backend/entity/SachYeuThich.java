@@ -1,10 +1,12 @@
 package vn.lvhung.webbansach_backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
+@Builder
 @Table(name = "sach_yeu_thich")
 public class SachYeuThich {
     @Id
