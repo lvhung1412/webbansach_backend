@@ -16,7 +16,7 @@ public interface HinhAnhRepository extends JpaRepository<HinhAnh,Integer> {
     public List<HinhAnh> findHinhAnhBySach(Sach sach);
     @Modifying
     @Transactional
-    @Query("DELETE FROM HinhAnh i WHERE i.isThumbnail = false AND i.sach.maSach = :maSach")
+    @Query("DELETE FROM HinhAnh h WHERE h.la_thumbnail = false AND h.sach.maSach = :maSach")
     public void deleteHinhAnhWithFalseThumbnailByMaSach(@Param("maSach") int maSach);
 
 }
