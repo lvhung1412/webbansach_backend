@@ -15,13 +15,13 @@ public class ThanhToan {
     private int maThanhToan;
 
     @Column(name = "ten_thanh_toan")
-    private int tenThanhToan;
+    private String tenThanhToan;
 
     @Column(name = "mo_ta")
-    private int moTa;
+    private String moTa;
 
     @Column(name = "chi_phi_thanh_toan")
-    private int chiPhiThanhToan;
+    private double chiPhiThanhToan;
 
     @OneToMany(mappedBy = "thanhToan",fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<DonHang> danhSachDonHang;

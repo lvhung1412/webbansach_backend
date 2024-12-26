@@ -23,7 +23,7 @@ public class Sach {
     @Column(name = "isbn", length = 256)
     private String ISBN;
 
-    @Column(name = "mo_ta", columnDefinition = "text")
+    @Column(name = "mo_ta", columnDefinition = "LONGTEXT")
     private String moTa;
 
     @Column(name="gia_niem_yet")
