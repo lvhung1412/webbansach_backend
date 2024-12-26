@@ -51,12 +51,12 @@ public class DonHang {
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "ma_hinh_thuc_thanh_toan")
-    private ThanhToan hinhThucThanhToan;
+    private ThanhToan thanhToan;
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "ma_hinh_thuc_giao_hang")
-    private VanChuyen hinhThucGiaoHang;
+    private VanChuyen vanChuyen;
 }

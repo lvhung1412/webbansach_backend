@@ -49,7 +49,7 @@ public class DonHangServiceImpl implements DonHangService{
 
             int idPayment = Integer.parseInt(formatStringByJson(String.valueOf(jsonData.get("idPayment"))));
             Optional<ThanhToan> payment = thanhToanRepository.findById(idPayment);
-            orderData.setHinhThucThanhToan(payment.get());
+            orderData.setThanhToan(payment.get());
 
             DonHang newOrder = donHangRepository.save(orderData);
 
