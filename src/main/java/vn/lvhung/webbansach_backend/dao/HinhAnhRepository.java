@@ -11,7 +11,7 @@ import vn.lvhung.webbansach_backend.entity.Sach;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "hinh-anh")
+@RepositoryRestResource(path = "images")
 public interface HinhAnhRepository extends JpaRepository<HinhAnh,Integer> {
     public List<HinhAnh> findHinhAnhBySach(Sach sach);
     @Modifying
