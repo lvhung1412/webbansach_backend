@@ -8,7 +8,7 @@ import vn.lvhung.webbansach_backend.entity.SachYeuThich;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "sach-yeu-thich")
+@RepositoryRestResource(path = "favorite-books")
 public interface SachYeuThichRepository extends JpaRepository<SachYeuThich,Integer> {
     public SachYeuThich findSachYeuThichBySachAndNguoiDung(Sach sach, NguoiDung nguoiDung);
     public List<SachYeuThich> findSachYeuThichByNguoiDung(NguoiDung nguoiDung);
