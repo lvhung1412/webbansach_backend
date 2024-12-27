@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
 import vn.lvhung.webbansach_backend.entity.Sach;
 
-@RepositoryRestResource(path = "sach")
+@RepositoryRestResource(path = "books")
 public interface SachRepository extends JpaRepository<Sach,Integer> {
     Page<Sach> findByTenSachContaining(@RequestParam("tenSach") String tenSach, Pageable pageable);
 
