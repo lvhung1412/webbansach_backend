@@ -8,7 +8,7 @@ import vn.lvhung.webbansach_backend.entity.DonHang;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "chi-tiet-don-hang")
+@RepositoryRestResource(path = "order-detail")
 public interface ChiTietDonHangRepository extends JpaRepository<ChiTietDonHang, Long> {
     public List<ChiTietDonHang> findChiTietDonHangByDonHang(DonHang donHang);
 
