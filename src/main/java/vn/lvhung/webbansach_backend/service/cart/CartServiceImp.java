@@ -1,28 +1,28 @@
-package vn.lvhung.webbansach_backend.service.giohang;
+package vn.lvhung.webbansach_backend.service.cart;
+
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import vn.lvhung.webbansach_backend.dao.GioHangRepository;
-import vn.lvhung.webbansach_backend.dao.NguoiDungRepository;
-import vn.lvhung.webbansach_backend.entity.GioHang;
-import vn.lvhung.webbansach_backend.entity.NguoiDung;
-import vn.lvhung.webbansach_backend.entity.Sach;
+import vn.lvhung.webbansach_backend.dao.CartItemRepository;
+import vn.lvhung.webbansach_backend.dao.UserRepository;
+import vn.lvhung.webbansach_backend.entity.CartItem;
+import vn.lvhung.webbansach_backend.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GioHangServiceImpl implements GioHangService{
+public class CartServiceImp implements CartService {
     private final ObjectMapper objectMapper;
     @Autowired
-    public NguoiDungRepository nguoiDungRepository;
+    public UserRepository userRepository;
     @Autowired
-    public GioHangRepository gioHangRepository;
-    public GioHangServiceImpl(ObjectMapper objectMapper) {
+    public CartItemRepository cartItemRepository;
+    public CartServiceImp(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -30,53 +30,52 @@ public class GioHangServiceImpl implements GioHangService{
     public ResponseEntity<?> save(JsonNode jsonData) {
         try{
             int idUser = 0;
-
             // Danh sách item của data vừa truyền
-            List<GioHang> cartItemDataList = new ArrayList<>();
+            List<CartItem> cartItemDataList = new ArrayList<>();
             for (JsonNode jsonDatum : jsonData) {
-                GioHang cartItemData = objectMapper.treeToValue(jsonDatum, GioHang.class);
+                CartItem cartItemData = objectMapper.treeToValue(jsonDatum, CartItem.class);
                 idUser = Integer.parseInt(formatStringByJson(String.valueOf(jsonDatum.get("idUser"))));
                 cartItemDataList.add(cartItemData);
             }
-            Optional<NguoiDung> user = nguoiDungRepository.findById(idUser);
+            Optional<User> user = userRepository.findById(idUser);
             // Danh sách item của user
-            List<GioHang> cartItemList = user.get().getListCartItems();
+            List<CartItem> cartItemList = user.get().getListCartItems();
 
             // Lặp qua từng item và xử lý
-            for (GioHang cartItemData : cartItemDataList) {
+            for (CartItem cartItemData : cartItemDataList) {
                 boolean isHad = false;
-                for (GioHang cartItem : cartItemList) {
+                for (CartItem cartItem : cartItemList) {
                     // Nếu trong cart của user có item đó rồi thì sẽ update lại quantity
-                    if (cartItem.getSach().getMaSach() == cartItemData.getSach().getMaSach()) {
-                        cartItem.setSoLuong(cartItem.getSoLuong() + cartItemData.getSoLuong());
+                    if (cartItem.getBook().getIdBook() == cartItemData.getBook().getIdBook()) {
+                        cartItem.setQuantity(cartItem.getQuantity() + cartItemData.getQuantity());
                         isHad = true;
                         break;
                     }
                 }
                 // Nếu chưa có thì thêm mới item đó
                 if (!isHad) {
-                    GioHang cartItem = new GioHang();
-                    cartItem.setNguoiDung(user.get());
-                    cartItem.setSoLuong(cartItemData.getSoLuong());
-                    cartItem.setSach(cartItemData.getSach());
+                    CartItem cartItem = new CartItem();
+                    cartItem.setUser(user.get());
+                    cartItem.setQuantity(cartItemData.getQuantity());
+                    cartItem.setBook(cartItemData.getBook());
                     cartItemList.add(cartItem);
                 }
             }
             user.get().setListCartItems(cartItemList);
-            NguoiDung newUser = nguoiDungRepository.save(user.get());
+            User newUser = userRepository.save(user.get());
 
 
             if (cartItemDataList.size() == 1) {
-                List<GioHang> cartItemListTemp = newUser.getListCartItems();
-                return ResponseEntity.ok(cartItemListTemp.get(cartItemList.size() - 1).getMaGioHang());
+                List<CartItem> cartItemListTemp = newUser.getListCartItems();
+                return ResponseEntity.ok(cartItemListTemp.get(cartItemList.size() - 1).getIdCart());
             }
 
             return ResponseEntity.ok().build();
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
-
     }
 
     @Override
@@ -84,9 +83,9 @@ public class GioHangServiceImpl implements GioHangService{
         try{
             int idCart = Integer.parseInt(formatStringByJson(String.valueOf(jsonData.get("idCart"))));
             int quantity = Integer.parseInt(formatStringByJson(String.valueOf(jsonData.get("quantity"))));
-            Optional<GioHang> cartItem = gioHangRepository.findById(idCart);
-            cartItem.get().setSoLuong(quantity);
-            gioHangRepository.save(cartItem.get());
+            Optional<CartItem> cartItem = cartItemRepository.findById(idCart);
+            cartItem.get().setQuantity(quantity);
+            cartItemRepository.save(cartItem.get());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();

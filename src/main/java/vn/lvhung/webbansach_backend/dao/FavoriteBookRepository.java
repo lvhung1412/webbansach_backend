@@ -1,10 +1,10 @@
 package vn.lvhung.webbansach_backend.dao;
 
-import com.example.web_bookstore_be.entity.Book;
-import com.example.web_bookstore_be.entity.FavoriteBook;
-import com.example.web_bookstore_be.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import vn.lvhung.webbansach_backend.entity.Book;
+import vn.lvhung.webbansach_backend.entity.FavoriteBook;
+import vn.lvhung.webbansach_backend.entity.User;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package vn.lvhung.webbansach_backend.service.nguoidung;
+package vn.lvhung.webbansach_backend.service.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,32 +9,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import vn.lvhung.webbansach_backend.dao.NguoiDungRepository;
-import vn.lvhung.webbansach_backend.dao.QuyenRepository;
-import vn.lvhung.webbansach_backend.entity.NguoiDung;
-import vn.lvhung.webbansach_backend.entity.Quyen;
-import vn.lvhung.webbansach_backend.entity.ThongBao;
+import vn.lvhung.webbansach_backend.dao.RoleRepository;
+import vn.lvhung.webbansach_backend.dao.UserRepository;
+import vn.lvhung.webbansach_backend.entity.Notification;
+import vn.lvhung.webbansach_backend.entity.Role;
+import vn.lvhung.webbansach_backend.entity.User;
 import vn.lvhung.webbansach_backend.security.JwtResponse;
 import vn.lvhung.webbansach_backend.service.JWT.JwtService;
 import vn.lvhung.webbansach_backend.service.UploadImage.UploadImageService;
 import vn.lvhung.webbansach_backend.service.email.EmailService;
-import vn.lvhung.webbansach_backend.service.utils.Base64ToMultipartFileConverter;
+import vn.lvhung.webbansach_backend.service.util.Base64ToMultipartFileConverter;
 
-import java.sql.Date;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import java.util.*;
 
 @Service
-public class NguoiDungServiceImpl implements NguoiDungService{
+public class UserServiceImp implements UserService {
     @Autowired
-    private NguoiDungRepository nguoiDungRepository;
+    private UserRepository userRepository;
     @Autowired
-    private QuyenRepository roleRepository;
+    private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
@@ -45,42 +40,41 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     private JwtService jwtService;
     private final ObjectMapper objectMapper;
 
-    public NguoiDungServiceImpl(ObjectMapper objectMapper) {
+    public UserServiceImp(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    @Override
-    public ResponseEntity<?> register(NguoiDung nguoiDung) {
+    public ResponseEntity<?> register(User user) {
         // Kiểm tra username đã tồn tại chưa
-        if (nguoiDungRepository.existsByTenDangNhap(nguoiDung.getTenDangNhap())) {
-            return ResponseEntity.badRequest().body(new ThongBao("Username đã tồn tại."));
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return ResponseEntity.badRequest().body(new Notification("Username đã tồn tại."));
         }
 
         // Kiểm tra email
-        if (nguoiDungRepository.existsByEmail(nguoiDung.getEmail())) {
-            return ResponseEntity.badRequest().body(new ThongBao("Email đã tồn tại."));
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return ResponseEntity.badRequest().body(new Notification("Email đã tồn tại."));
         }
 
         // Mã hoá mật khẩu
-        String encodePassword = passwordEncoder.encode(nguoiDung.getMatKhau());
-        nguoiDung.setMatKhau(encodePassword);
+        String encodePassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodePassword);
 
-        nguoiDung.setAvatar("");
+        user.setAvatar("");
 
         // Tạo mã kích hoạt cho người dùng
-        nguoiDung.setMaKichHoat(generateActivationCode());
-        nguoiDung.setDaKichHoat(false);
+        user.setActivationCode(generateActivationCode());
+        user.setEnabled(false);
 
         // Cho role mặc định
-        List<Quyen> roleList = new ArrayList<>();
-        roleList.add(roleRepository.findByTenQuyen("CUSTOMER"));
-        nguoiDung.setDanhSachQuyen(roleList);
+        List<Role> roleList = new ArrayList<>();
+        roleList.add(roleRepository.findByNameRole("CUSTOMER"));
+        user.setListRoles(roleList);
 
         // Lưu vào database
-        nguoiDungRepository.save(nguoiDung);
+        userRepository.save(user);
 
         // Gửi email cho người dùng để kích hoạt
-        sendEmailActivation(nguoiDung.getEmail(),nguoiDung.getMaKichHoat());
+        sendEmailActivation(user.getEmail(),user.getActivationCode());
 
         return ResponseEntity.ok("Đăng ký thành công!");
     }
@@ -88,17 +82,17 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     @Override
     public ResponseEntity<?> save(JsonNode userJson, String option) {
         try{
-            NguoiDung user = objectMapper.treeToValue(userJson, NguoiDung.class);
+            User user = objectMapper.treeToValue(userJson, User.class);
 
-            // Kiểm tra tên đăng nhập đã tồn tại chưa
+            // Kiểm tra username đã tồn tại chưa
             if (!option.equals("update")) {
-                if (nguoiDungRepository.existsByTenDangNhap(user.getTenDangNhap())) {
-                    return ResponseEntity.badRequest().body(new ThongBao("Username đã tồn tại."));
+                if (userRepository.existsByUsername(user.getUsername())) {
+                    return ResponseEntity.badRequest().body(new Notification("Username đã tồn tại."));
                 }
 
                 // Kiểm tra email
-                if (nguoiDungRepository.existsByEmail(user.getEmail())) {
-                    return ResponseEntity.badRequest().body(new ThongBao("Email đã tồn tại."));
+                if (userRepository.existsByEmail(user.getEmail())) {
+                    return ResponseEntity.badRequest().body(new Notification("Email đã tồn tại."));
                 }
             }
 
@@ -106,34 +100,34 @@ public class NguoiDungServiceImpl implements NguoiDungService{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
             Instant instant = Instant.from(formatter.parse(formatStringByJson(String.valueOf(userJson.get("dateOfBirth")))) );
             java.sql.Date dateOfBirth = new java.sql.Date(Date.from(instant).getTime());
-            user.setNgaySinh(dateOfBirth);
+            user.setDateOfBirth(dateOfBirth);
 
             // Set role cho user
             int idRoleRequest = Integer.parseInt(String.valueOf(userJson.get("role")));
-            Optional<Quyen> role = roleRepository.findById(idRoleRequest);
-            List<Quyen> roles = new ArrayList<>();
+            Optional<Role> role = roleRepository.findById(idRoleRequest);
+            List<Role> roles = new ArrayList<>();
             roles.add(role.get());
-            user.setDanhSachQuyen(roles);
+            user.setListRoles(roles);
 
             // Mã hoá mật khẩu
-            if (!(user.getMatKhau() == null)) { // Trường hợp là thêm hoặc thay đổi password
-                String encodePassword = passwordEncoder.encode(user.getMatKhau());
-                user.setMatKhau(encodePassword);
+            if (!(user.getPassword() == null)) { // Trường hợp là thêm hoặc thay đổi password
+                String encodePassword = passwordEncoder.encode(user.getPassword());
+                user.setPassword(encodePassword);
             } else {
                 // Trường hợp cho update không thay đổi password
-                Optional<NguoiDung> userTemp = nguoiDungRepository.findById(user.getMaNguoiDung());
-                user.setMatKhau(userTemp.get().getMatKhau());
+                Optional<User> userTemp = userRepository.findById(user.getIdUser());
+                user.setPassword(userTemp.get().getPassword());
             }
 
             // Set avatar
             String avatar = (formatStringByJson(String.valueOf((userJson.get("avatar")))));
             if (avatar.length() > 500) {
                 MultipartFile avatarFile = Base64ToMultipartFileConverter.convert(avatar);
-                String avatarURL = uploadImageService.uploadImage(avatarFile, "User_" + user.getMaNguoiDung());
+                String avatarURL = uploadImageService.uploadImage(avatarFile, "User_" + user.getIdUser());
                 user.setAvatar(avatarURL);
             }
 
-            nguoiDungRepository.save(user);
+            userRepository.save(user);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -144,7 +138,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     @Override
     public ResponseEntity<?> delete(int id) {
         try{
-            Optional<NguoiDung> user = nguoiDungRepository.findById(id);
+            Optional<User> user = userRepository.findById(id);
 
             if (user.isPresent()) {
                 String imageUrl = user.get().getAvatar();
@@ -153,7 +147,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
                     uploadImageService.deleteImage(imageUrl);
                 }
 
-                nguoiDungRepository.deleteById(id);
+                userRepository.deleteById(id);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,11 +161,11 @@ public class NguoiDungServiceImpl implements NguoiDungService{
         try{
             int idUser = Integer.parseInt(formatStringByJson(String.valueOf(userJson.get("idUser"))));
             String newPassword = formatStringByJson(String.valueOf(userJson.get("newPassword")));
-//            System.out.println(idUser);
-//            System.out.println(newPassword);
-            Optional<NguoiDung> user = nguoiDungRepository.findById(idUser);
-            user.get().setMatKhau(passwordEncoder.encode(newPassword));
-            nguoiDungRepository.save(user.get());
+            System.out.println(idUser);
+            System.out.println(newPassword);
+            Optional<User> user = userRepository.findById(idUser);
+            user.get().setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user.get());
         } catch (Exception e) {
             e.printStackTrace();
             ResponseEntity.badRequest().build();
@@ -186,7 +180,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
             int idUser = Integer.parseInt(formatStringByJson(String.valueOf(userJson.get("idUser"))));
             String dataAvatar = formatStringByJson(String.valueOf(userJson.get("avatar")));
 
-            Optional<NguoiDung> user = nguoiDungRepository.findById(idUser);
+            Optional<User> user = userRepository.findById(idUser);
 
             // Xoá đi ảnh trước đó trong cloudinary
             if (user.get().getAvatar().length() > 0) {
@@ -199,8 +193,8 @@ public class NguoiDungServiceImpl implements NguoiDungService{
                 user.get().setAvatar(avatarUrl);
             }
 
-            NguoiDung newUser =  nguoiDungRepository.save(user.get());
-            final String jwtToken = jwtService.generateToken(newUser.getTenDangNhap());
+            User newUser =  userRepository.save(user.get());
+            final String jwtToken = jwtService.generateToken(newUser.getUsername());
             return ResponseEntity.ok(new JwtResponse(jwtToken));
 
         } catch (Exception e) {
@@ -213,22 +207,22 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     @Override
     public ResponseEntity<?> updateProfile(JsonNode userJson) {
         try{
-            NguoiDung userRequest = objectMapper.treeToValue(userJson, NguoiDung.class);
-            Optional<NguoiDung> user = nguoiDungRepository.findById(userRequest.getMaNguoiDung());
+            User userRequest = objectMapper.treeToValue(userJson, User.class);
+            Optional<User> user = userRepository.findById(userRequest.getIdUser());
 
-            user.get().setHoDem(userRequest.getHoDem());
-            user.get().setTen(userRequest.getTen());
+            user.get().setFirstName(userRequest.getFirstName());
+            user.get().setLastName(userRequest.getLastName());
             // Format lại ngày sinh
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
             Instant instant = Instant.from(formatter.parse(formatStringByJson(String.valueOf(userJson.get("dateOfBirth")))));
             java.sql.Date dateOfBirth = new java.sql.Date(Date.from(instant).getTime());
 
-            user.get().setNgaySinh(dateOfBirth);
-            user.get().setSoDienThoai(userRequest.getSoDienThoai());
-            user.get().setDiaChiGiaoHang(userRequest.getDiaChiGiaoHang());
-            user.get().setGioiTinh(userRequest.getGioiTinh());
+            user.get().setDateOfBirth(dateOfBirth);
+            user.get().setPhoneNumber(userRequest.getPhoneNumber());
+            user.get().setDeliveryAddress(userRequest.getDeliveryAddress());
+            user.get().setGender(userRequest.getGender());
 
-            nguoiDungRepository.save(user.get());
+            userRepository.save(user.get());
         } catch (Exception e) {
             e.printStackTrace();
             ResponseEntity.badRequest().build();
@@ -239,7 +233,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     @Override
     public ResponseEntity<?> forgotPassword(JsonNode jsonNode) {
         try{
-            NguoiDung user = nguoiDungRepository.findByEmail(formatStringByJson(jsonNode.get("email").toString()));
+            User user = userRepository.findByEmail(formatStringByJson(jsonNode.get("email").toString()));
 
             if (user == null) {
                 return ResponseEntity.notFound().build();
@@ -247,8 +241,8 @@ public class NguoiDungServiceImpl implements NguoiDungService{
 
             // Đổi mật khẩu cho user
             String passwordTemp = generateTemporaryPassword();
-            user.setMatKhau(passwordEncoder.encode(passwordTemp));
-            nguoiDungRepository.save(user);
+            user.setPassword(passwordEncoder.encode(passwordTemp));
+            userRepository.save(user);
 
             // Gửi email đê nhận mật khẩu
             sendEmailForgotPassword(user.getEmail(), passwordTemp);
@@ -272,7 +266,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
         String message = "Cảm ơn bạn đã là thành viên của chúng tôi. Vui lòng kích hoạt tài khoản!: <br/> Mã kích hoạt: <strong>"+ activationCode +"<strong/>";
         message += "<br/> Click vào đây để <a href="+ url +">kích hoạt</a>";
         try {
-            emailService.sendMessage("laihung1412@gmail.com", email, subject, message);
+            emailService.sendMessage("dongph.0502@gmail.com", email, subject, message);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -283,7 +277,7 @@ public class NguoiDungServiceImpl implements NguoiDungService{
         String message = "Mật khẩu tạm thời của bạn là: <strong>" + password + "</strong>";
         message += "<br/> <span>Vui lòng đăng nhập và đổi lại mật khẩu của bạn</span>";
         try {
-            emailService.sendMessage("laihung1412@gmail.com", email, subject, message);
+            emailService.sendMessage("dongph.0502@gmail.com", email, subject, message);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -294,18 +288,18 @@ public class NguoiDungServiceImpl implements NguoiDungService{
     }
 
     public ResponseEntity<?> activeAccount(String email, String activationCode) {
-        NguoiDung nguoiDung = nguoiDungRepository.findByEmail(email);
-        if (nguoiDung == null) {
-            return ResponseEntity.badRequest().body(new ThongBao("Người dùng không tồn tại!"));
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(new Notification("Người dùng không tồn tại!"));
         }
-        if (nguoiDung.isDaKichHoat()) {
-            return ResponseEntity.badRequest().body(new ThongBao("Tài khoản đã được kích hoạt"));
+        if (user.isEnabled()) {
+            return ResponseEntity.badRequest().body(new Notification("Tài khoản đã được kích hoạt"));
         }
-        if (nguoiDung.getMaKichHoat().equals(activationCode)) {
-            nguoiDung.setDaKichHoat(true);
-            nguoiDungRepository.save(nguoiDung);
+        if (user.getActivationCode().equals(activationCode)) {
+            user.setEnabled(true);
+            userRepository.save(user);
         } else {
-            return ResponseEntity.badRequest().body(new ThongBao("Mã kích hoạt không chính xác!"));
+            return ResponseEntity.badRequest().body(new Notification("Mã kích hoạt không chính xác!"));
         }
         return ResponseEntity.ok("Kích hoạt thành công");
     }

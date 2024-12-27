@@ -1,13 +1,13 @@
 package vn.lvhung.webbansach_backend.dao;
 
-import com.example.web_bookstore_be.entity.Book;
-import com.example.web_bookstore_be.entity.Image;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import vn.lvhung.webbansach_backend.entity.Book;
+import vn.lvhung.webbansach_backend.entity.Image;
 
 import java.util.List;
 

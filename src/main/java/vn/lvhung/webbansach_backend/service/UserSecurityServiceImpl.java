@@ -3,51 +3,43 @@ package vn.lvhung.webbansach_backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.lvhung.webbansach_backend.dao.NguoiDungRepository;
-import vn.lvhung.webbansach_backend.dao.QuyenRepository;
-import vn.lvhung.webbansach_backend.entity.NguoiDung;
-import vn.lvhung.webbansach_backend.entity.Quyen;
+import vn.lvhung.webbansach_backend.dao.RoleRepository;
+import vn.lvhung.webbansach_backend.dao.UserRepository;
+import vn.lvhung.webbansach_backend.entity.Role;
+import vn.lvhung.webbansach_backend.entity.User;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
-public class UserSecurityServiceImpl implements UserSecurityService {
-
-    private NguoiDungRepository nguoiDungRepository;
-    private QuyenRepository quyenRepository;
-
+public class UserSecurityServiceImpl implements UserSecurityService{
     @Autowired
-    public UserSecurityServiceImpl(NguoiDungRepository nguoiDungRepository, QuyenRepository quyenRepository) {
-        this.nguoiDungRepository = nguoiDungRepository;
-        this.quyenRepository = quyenRepository;
-    }
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
-    public NguoiDung findByUsername(String tenDangNhap) {
-        return nguoiDungRepository.findByTenDangNhap(tenDangNhap);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
+    // Khi "dap" ở Security Configuration được gọi thì nó sẽ chay hàm này để lấy ra user trong csdl
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        NguoiDung nguoiDung = nguoiDungRepository.findByTenDangNhap(username);
-
-        if(nguoiDung == null){
-            throw  new UsernameNotFoundException("Tài khoản không tồn tại!");
+        User user = findByUsername(username);
+        if(user == null) {
+            throw new UsernameNotFoundException("Tài khoản không tồn tại!");
         }
-        User user = new User(
-                nguoiDung.getTenDangNhap(),
-                nguoiDung.getMatKhau(),
-                rolesToAuthorities(nguoiDung.getDanhSachQuyen())
-                );
-        return user;
+
+        org.springframework.security.core.userdetails.User userDetail = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), rolesToAuthorities(user.getListRoles()));
+        return userDetail;
     }
 
-    private Collection<? extends GrantedAuthority>  rolesToAuthorities(Collection<Quyen> quyens){
-        return quyens.stream().map(quyen -> new SimpleGrantedAuthority(quyen.getTenQuyen())).collect(Collectors.toList());
+    // Hàm để lấy role
+    private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getNameRole())).collect(Collectors.toList());
     }
 }

@@ -1,11 +1,11 @@
-package vn.lvhung.webbansach_backend.service.nguoidung;
+package vn.lvhung.webbansach_backend.service.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
-import vn.lvhung.webbansach_backend.entity.NguoiDung;
+import vn.lvhung.webbansach_backend.entity.User;
 
-public interface NguoiDungService {
-    public ResponseEntity<?> register(NguoiDung nguoiDung);
+public interface UserService {
+    public ResponseEntity<?> register(User user);
     public ResponseEntity<?> save(JsonNode userJson, String option);
     public ResponseEntity<?> delete(int id);
     public ResponseEntity<?> changePassword(JsonNode userJson);

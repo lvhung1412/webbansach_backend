@@ -1,9 +1,8 @@
 package vn.lvhung.webbansach_backend.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import vn.lvhung.webbansach_backend.entity.NguoiDung;
+import vn.lvhung.webbansach_backend.entity.User;
 
 public interface UserSecurityService extends UserDetailsService {
-
-    public NguoiDung findByUsername(String tenDangNhap);
+    public User findByUsername(String username);
 }

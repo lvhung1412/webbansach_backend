@@ -1,9 +1,9 @@
 package vn.lvhung.webbansach_backend.dao;
 
-import com.example.web_bookstore_be.entity.Order;
-import com.example.web_bookstore_be.entity.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import vn.lvhung.webbansach_backend.entity.Order;
+import vn.lvhung.webbansach_backend.entity.OrderDetail;
 
 import java.util.List;
 

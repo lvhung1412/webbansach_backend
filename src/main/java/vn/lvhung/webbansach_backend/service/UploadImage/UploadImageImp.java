@@ -10,14 +10,13 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class UploadImageServiceImpl implements UploadImageService{
+public class UploadImageImp implements UploadImageService {
     private final Cloudinary cloudinary;
-
     @Override
     public String uploadImage(MultipartFile multipartFile, String name) {
         String url = "";
         try{
-            url = cloudinary.uploader()
+             url = cloudinary.uploader()
                     .upload(multipartFile.getBytes(), Map.of("public_id", name))
                     .get("url")
                     .toString();
