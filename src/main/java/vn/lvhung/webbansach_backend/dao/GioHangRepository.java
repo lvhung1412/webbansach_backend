@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import vn.lvhung.webbansach_backend.entity.GioHang;
 
-@RepositoryRestResource(path = "gio-hang")
+@RepositoryRestResource(path = "cart-items")
 public interface GioHangRepository extends JpaRepository<GioHang,Integer> {
     @Modifying
     @Transactional
