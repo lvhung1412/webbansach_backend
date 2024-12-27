@@ -1,11 +1,11 @@
 package vn.lvhung.webbansach_backend.dao;
 
-import com.example.web_bookstore_be.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
+import vn.lvhung.webbansach_backend.entity.Book;
 
 @RepositoryRestResource(path = "books")
 public interface BookRepository extends JpaRepository<Book, Integer> {
