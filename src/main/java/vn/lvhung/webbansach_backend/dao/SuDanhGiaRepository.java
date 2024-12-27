@@ -5,7 +5,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import vn.lvhung.webbansach_backend.entity.ChiTietDonHang;
 import vn.lvhung.webbansach_backend.entity.SuDanhGia;
 
-@RepositoryRestResource(path = "su-danh-gia")
+@RepositoryRestResource(path = "reviews")
 public interface SuDanhGiaRepository extends JpaRepository<SuDanhGia,Long> {
     public SuDanhGia findSuDanhGiaByChiTietDonHang(ChiTietDonHang chiTietDonHang);
     public long countBy();
