@@ -54,7 +54,7 @@ public class Endpoints {
             "/favorite-book/delete-book",
     };
 
-    public static final String[] ADMIN_ENDPOINT_ENDPOINTS = {
+    public static final String[] ADMIN_ENDPOINTS = {
             "/users",
             "/users/**",
             "/cart-items/**",

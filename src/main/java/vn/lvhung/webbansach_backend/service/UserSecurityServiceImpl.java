@@ -23,6 +23,8 @@ public class UserSecurityServiceImpl implements UserSecurityService{
 
     @Override
     public User findByUsername(String username) {
+//        System.out.println(username);
+        User user = userRepository.findByUsername(username);
         return userRepository.findByUsername(username);
     }
 
