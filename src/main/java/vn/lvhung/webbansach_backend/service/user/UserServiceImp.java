@@ -263,7 +263,7 @@ public class UserServiceImp implements UserService {
         String endpointFE = "http://localhost:3000";
         String url = endpointFE + "/active/" + email + "/" + activationCode;
         String subject = "Kích hoạt tài khoản";
-        String message = "Cảm ơn bạn đã là thành viên của chúng tôi. Vui lòng kích hoạt tài khoản!: <br/> Mã kích hoạt: <strong>"+ activationCode +"<strong/>";
+        String message = "Cảm ơn bạn đã quan tâm đến cửa hàng của chúng tôi. Vui lòng kích hoạt tài khoản!: <br/> Mã kích hoạt: <strong>"+ activationCode +"<strong/>";
         message += "<br/> Click vào đây để <a href="+ url +">kích hoạt</a>";
         try {
             emailService.sendMessage("laihung1412@gmail.com", email, subject, message);
