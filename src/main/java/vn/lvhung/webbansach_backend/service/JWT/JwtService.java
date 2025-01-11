@@ -59,7 +59,7 @@ public class JwtService {
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
 //                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000) ) // Hết hạn sau 30 phút
-                .setExpiration(new Date(System.currentTimeMillis() + 100000L * 60 * 60 * 1000) )
+                .setExpiration(new Date(System.currentTimeMillis() + 100000L * 60 * 60 * 1000) ) // hết hạn sau 100 000 giờ
                 .signWith(SignatureAlgorithm.HS256, getSigneKey())
                 .compact();
     }
